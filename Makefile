@@ -9,14 +9,14 @@ LDFLAGS=-pthread
 
 EXE=$(NAME).bin
 
-src = *.c
+src = puny-server.c main.c
 objects = $(patsubst %.c,%.o,$(src))
 
 all: $(EXE)
 
 $(EXE): $(objects)
 	$(info Linking object $< for $@)
-	$(CC) $(LDFLAGS) $< -o $@
+	$(CC) $(objects) -o $@ $(LDFLAGS)
 
 %.o : %.c
 	$(info Processing source $<)

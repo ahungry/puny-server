@@ -10,14 +10,14 @@ LDFLAGS = -L/usr/x86_64-w64-mingw32/lib \
 
 EXE=$(NAME).exe
 
-src = *.c
+src = puny-server.c main.c
 objects = $(patsubst %.c,%.coff,$(src))
 
 all: $(EXE)
 
 $(EXE): $(objects)
 	$(info Linking object $< for $@)
-	$(CC) $< -o $@ $(LDFLAGS)
+	$(CC) $(objects) -o $@ $(LDFLAGS)
 
 %.coff : %.c
 	$(info Processing source $<)
