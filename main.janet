@@ -1,3 +1,7 @@
 (import build/punyserver :as ps)
 
-(ps/start)
+(defn handler [req]
+  (pp req)
+  "Hello from janet")
+
+(ps/start handler)

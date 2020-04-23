@@ -5,7 +5,7 @@
 
 JanetFunction *handler;
 
-static int
+char *
 janet_universal_cb (char *request)
 {
   JanetArray *args;
@@ -30,7 +30,7 @@ puny_server_start_wrap (int32_t argc, Janet *argv)
 
   int sock = make_sock ();
   server_sock = sock;
-  callback = janet_universal_cb ();
+  callback = janet_universal_cb;
 
   fprintf (stderr, "Listening on 12003\n");
 
