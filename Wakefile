@@ -4,25 +4,39 @@ NAME=puny-server
 
 CC=x86_64-w64-mingw32-gcc
 
-CFLAGS  = -Wall -std=c99 -I/usr/x86_64-w64-mingw32/include
+CFLAGS  = -Wall -std=c99 -fPIC -I/usr/x86_64-w64-mingw32/include
 LDFLAGS = -L/usr/x86_64-w64-mingw32/lib \
         -pthread -l:libws2_32.a -l:libwsock32.a -l:libwinpthread.a
 
 EXE=$(NAME).exe
+DLL=$(NAME).dll
+DLL_EXE=$(NAME).dll.exe
 
 src = puny-server.c main.c
 objects = $(patsubst %.c,%.coff,$(src))
 
-all: $(EXE)
+all: $(EXE) $(DLL_EXE)
 
 $(EXE): $(objects)
 	$(info Linking object $< for $@)
 	$(CC) $(objects) -o $@ $(LDFLAGS)
+
+$(DLL): $(objects)
+	$(info Creating shared objects $< for $@)
+	$(CC) -shared $(objects) -o $@ $(LDFLAGS)
+
+$(DLL_EXE): $(DLL)
+	$(info Linking binary to shared object $< for $@)
+	$(CC) main.c -o $@ $(LDFLAGS) -L. -lpuny-server
 
 %.coff : %.c
 	$(info Processing source $<)
 	$(CC) $(CFLAGS) -c $< -o $(patsubst %.c,%.coff,$<)
 
 clean:
-	-rm *.coff
-	-rm $(EXE)
+	@-rm -fr *.o
+	@-rm -fr *.coff
+	@-rm -fr *.bin
+	@-rm -fr *.exe
+	@-rm -fr *.so
+	@-rm -fr *.dll

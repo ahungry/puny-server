@@ -33,6 +33,9 @@ $(SO_EXE): $(SO)
 	$(CC) $(CFLAGS) -c $< -o $(patsubst %.c,%.o,$<)
 
 clean:
-	@-rm -f *.o
-	@-rm -f *.so
-	@-rm -f $(EXE)
+	@-rm -fr *.o
+	@-rm -fr *.coff
+	@-rm -fr *.bin
+	@-rm -fr *.exe
+	@-rm -fr *.so
+	@-rm -fr *.dll
