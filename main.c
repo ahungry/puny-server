@@ -12,10 +12,10 @@ main(__attribute__((unused))int argc,
 {
   signal (SIGINT, sigint_handler);
 
-  int sock = make_sock ();
+  int sock = make_sock (PORT_STR);
   server_sock = sock;
 
-  fprintf (stderr, "Listening on 12003\n");
+  fprintf (stderr, "Listening on %s\n", PORT_STR);
 
   /* Serve the listening socket until killed */
   take_connections_forever (sock);

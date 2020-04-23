@@ -3,7 +3,7 @@
 #include <janet.h>
 #include "puny-server.h"
 
-Janet handler;
+const char * handler;
 
 char *
 janet_universal_cb (char *request)
@@ -21,7 +21,10 @@ janet_universal_cb (char *request)
 
   char *embed = malloc (200 + strlen (request));
 
-  sprintf (embed, "(import handler :as h) (h/main \"%s\")", request);
+  // FIXME: Need to escape double quotes on incoming user input
+  sprintf (embed, "(import %s :as h) (h/main \"%s\")",
+           handler,
+           request);
 
   Janet *out = malloc (1);
   janet_dostring (env, embed, "main", out);
@@ -38,16 +41,18 @@ janet_universal_cb (char *request)
 static Janet
 puny_server_start_wrap (int32_t argc, Janet *argv)
 {
-  janet_fixarity (argc, 1);
+  janet_fixarity (argc, 2);
 
-  JanetFunction *f = janet_getfunction (argv, 0);
-  handler = janet_wrap_function (f);
+  const char *my_handler = janet_getcstring (argv, 0);
+  const char *port = janet_getcstring (argv, 1);
 
-  int sock = make_sock ();
+  handler = my_handler;
+
+  int sock = make_sock (port);
   server_sock = sock;
   callback = janet_universal_cb;
 
-  fprintf (stderr, "Listening on 12003\n");
+  fprintf (stderr, "Listening on %s\n", port);
 
   /* Serve the listening socket until killed */
   take_connections_forever (sock);

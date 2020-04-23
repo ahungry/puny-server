@@ -200,7 +200,7 @@ void take_connections_forever(int ssock)
 WSADATA wsaData;
 
 int
-make_sock ()
+make_sock (char *port)
 {
   int iResult;
 
@@ -222,7 +222,7 @@ make_sock ()
   hints.ai_protocol = IPPROTO_TCP;
   hints.ai_flags = AI_PASSIVE;
 
-  iResult = getaddrinfo (NULL, PORT_STR, &hints, &result);
+  iResult = getaddrinfo (NULL, port, &hints, &result);
   if (iResult != 0)
     {
       fprintf (stderr, "getaddrinfo failed: %d\n", iResult);
@@ -292,7 +292,7 @@ make_sock ()
 }
 #else
 int
-make_sock ()
+make_sock (char *port)
 {
   struct addrinfo hints, *res;
   struct sigaction sa;
@@ -300,7 +300,7 @@ make_sock ()
   char portno[10];
 
   // strcpy (portno, argc > 1 ? argv[1] : PORT_STR);
-  strcpy (portno, PORT_STR); //
+  strcpy (portno, port); //
 
   /* Look up the address to bind to */
   memset(&hints, 0, sizeof(struct addrinfo));
