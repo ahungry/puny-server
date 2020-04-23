@@ -6,6 +6,6 @@
     "Connection: close\n\n" res] ""))
 
 (defn main [req]
-  #(pp req)
+  (pp req)
   #(pp "in the janet")
-  (add-headers "Hello from janet"))
+  (add-headers req))
