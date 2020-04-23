@@ -4,3 +4,4 @@
 *.coff
 *.so
 *.dll
+/build/
