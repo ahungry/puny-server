@@ -41,6 +41,8 @@
 #define MAX_HTML_FILE_SIZE 8192
 
 int server_sock;
+// char * callback (int (*f)(char *request));//  { return fn (y); }
+char * (*callback)(char *request);
 
 void sigint_handler (int dummy);
 void wait_for_zombie ();

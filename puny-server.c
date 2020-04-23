@@ -107,6 +107,16 @@ read_tcp (int sock)
   return buf;
 }
 
+char *
+get_version (__attribute__((unused))char *request)
+{
+  return "HTTP/1.1 200 OK\n"
+    "Content-Type: text/html\n"
+    "Content-Length: 7\n"
+    "Connection: close\n\n"
+    "\"0.0.1\"";
+}
+
 /* ------------------------------------------------------------ */
 /* Core of implementation of a child process                    */
 /* ------------------------------------------------------------ */
@@ -116,8 +126,16 @@ void http_send_client_response(int csock)
 
   fprintf (stderr, "Read from the client socket:\n%s\n", buf);
 
-  http_send_header_success (csock);
-  (void) send (csock, "\"0.0.1\"", 7, 0);
+  if (NULL == callback)
+    {
+      callback = get_version;
+    }
+
+  char *response = callback (buf);
+  (void) send (csock, response, strlen (response), 0);
+
+  /* http_send_header_success (csock); */
+  /* (void) send (csock, "\"0.0.1\"", 7, 0); */
 
   // Politely hang up the call (if we do not send the length).
   // If we don't use this, error rate increases.
