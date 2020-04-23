@@ -329,6 +329,8 @@ main(int argc, char *argv[])
   int sock = make_sock ();
   server_sock = sock;
 
+  fprintf (stderr, "Listening on 12003\n");
+
   /* Serve the listening socket until killed */
   take_connections_forever (sock);
 
