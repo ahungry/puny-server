@@ -81,8 +81,14 @@ read_tcp (int sock)
 #ifdef _WIN32
   // WINDOWS
   // DWORD timeout = timeout_in_seconds * 1000;
-  DWORD timeout = 100;
+  DWORD timeout = 10;
   setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof timeout);
+
+  // FIXME: This will only read max CLIENT_CHUNK from users.
+  // We can break here so its fast on windows, until we figure out select
+  // based polling so we don't wait forever for the client option.
+  // https://docs.microsoft.com/en-us/windows/win32/winsock/receiving-and-sending-data-on-the-server
+  break;
 #else
   // LINUX
   struct timeval tv;
@@ -284,7 +290,7 @@ make_sock ()
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_flags = AI_PASSIVE;
 
-  if ( getaddrinfo(NULL, portno, &hints, &res) != 0 ) {
+  if (getaddrinfo (NULL, portno, &hints, &res) != 0 ) {
     perror("getaddrinfo");
     exit(EXIT_FAILURE);
   }
