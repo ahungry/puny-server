@@ -1,0 +1,2 @@
+#define PORT_STR "12003"
+#define CLIENT_CHUNK 1024

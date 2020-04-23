@@ -2,7 +2,7 @@
 #ifndef PUNY_SERVER_H
 #define PUNY_SERVER_H
 
-#define PORT_STR "12003"
+#include "config.h"
 
 #include <stdio.h>
 #include <stdlib.h>

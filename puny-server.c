@@ -50,14 +50,65 @@ void wait_for_zombie()
 }
 #endif
 
+
+/**
+ * Read some string from the destination socket, stopping when data
+ * ends.  Will populate buf with the contents of it.
+ */
+char *
+read_tcp (int sock)
+{
+  char *buf = NULL;
+  int i = 0;
+  int n = 0;
+  int offset = 0;
+  // int read_bytes = sizeof (buf) - 1;
+  int read_bytes = CLIENT_CHUNK;
+  char tmp[CLIENT_CHUNK];
+  int set_timer = 0;
+
+  while ((n = recv (sock, tmp, read_bytes, 0)) > 0)
+    {
+      tmp[n] = 0;
+      int mem = ++i * read_bytes * sizeof (char);
+      buf = realloc (buf, mem);
+      memcpy (buf + offset, tmp, strlen (tmp));
+      offset += n;
+
+      if (set_timer == 0)
+        {
+  // https://stackoverflow.com/questions/2876024/linux-is-there-a-read-or-recv-from-socket-with-timeout
+#ifdef _WIN32
+  // WINDOWS
+  // DWORD timeout = timeout_in_seconds * 1000;
+  DWORD timeout = 100;
+  setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&timeout, sizeof timeout);
+#else
+  // LINUX
+  struct timeval tv;
+  tv.tv_sec = 0;
+  // We need a way to dynamically set this after first received byte in read() call
+  tv.tv_usec = 1; // 500,000 would be half a second, as this is micro seconds
+  setsockopt (sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+#endif
+  set_timer = 1;
+        }
+
+    }
+
+  buf[offset] = 0;
+
+  return buf;
+}
+
 /* ------------------------------------------------------------ */
 /* Core of implementation of a child process                    */
 /* ------------------------------------------------------------ */
 void http_send_client_response(int csock)
 {
-  char buf[130];
+  char *buf = read_tcp (csock);
 
-  read (csock, buf, 130);
+  fprintf (stderr, "Read from the client socket:\n%s\n", buf);
 
   http_send_header_success (csock);
   (void) send (csock, "\"0.0.1\"", 7, 0);
