@@ -124,7 +124,7 @@ void http_send_client_response(int csock)
 {
   char *buf = read_tcp (csock);
 
-  fprintf (stderr, "Read from the client socket:\n%s\n", buf);
+  // fprintf (stderr, "Read from the client socket:\n%s\n", buf);
 
   if (NULL == callback)
     {

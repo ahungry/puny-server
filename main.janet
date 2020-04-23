@@ -4,4 +4,4 @@
   (pp req)
   "Hello from janet")
 
-(ps/start handler)
+(ps/start (fn [req] (pp req) "Hmmm..."))
