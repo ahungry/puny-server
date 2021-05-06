@@ -120,8 +120,6 @@ read_tcp (int sock)
 
   buf[offset] = 0;
 
-  fprintf (stderr, "The buf was: %s", buf);
-
   return buf;
 }
 

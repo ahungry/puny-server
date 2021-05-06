@@ -14,8 +14,6 @@ janet_universal_cb (char *request)
 
   JanetArray *args;
 
-  fprintf (stderr, "janet_universal_cb: %s\n", request);
-
   const uint8_t *s = janet_string ((unsigned char *) request, strlen (request));
 
   args = janet_array (1);
@@ -23,8 +21,7 @@ janet_universal_cb (char *request)
 
   char *embed = malloc (200 + strlen (request));
 
-  // FIXME: Need to escape double quotes on incoming user input
-  sprintf (embed, "(import %s :as h) (h/main \"%s\")",
+  sprintf (embed, "(import %s :as h) (h/main \n```%s\n```)",
            handler,
            request);
 

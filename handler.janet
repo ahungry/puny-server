@@ -6,6 +6,6 @@
     "Connection: close\n\n" res] ""))
 
 (defn main [req]
+  (pp "On the server side, we see this: ")
   (pp req)
-  #(pp "in the janet")
-  (add-headers req))
+  (add-headers (string "Client gets back their req: \n" req)))
