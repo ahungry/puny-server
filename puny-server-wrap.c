@@ -14,6 +14,8 @@ janet_universal_cb (char *request)
 
   JanetArray *args;
 
+  fprintf (stderr, "janet_universal_cb: %s\n", request);
+
   const uint8_t *s = janet_string ((unsigned char *) request, strlen (request));
 
   args = janet_array (1);
@@ -49,8 +51,9 @@ puny_server_start_wrap (int32_t argc, Janet *argv)
   handler = my_handler;
 
   int sock = make_sock (port);
-  server_sock = sock;
-  callback = janet_universal_cb;
+
+  set_server_sock (sock);
+  set_callback (janet_universal_cb);
 
   fprintf (stderr, "Listening on %s\n", port);
 

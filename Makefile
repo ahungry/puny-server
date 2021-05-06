@@ -26,7 +26,7 @@ $(SO): $(objects)
 
 $(SO_EXE): $(SO)
 	$(info Linking binary to shared object $< for $@)
-	$(CC) main.c -o $@ $(LDFLAGS) -L. -lpuny-server
+	$(CC) main.c -o $@ $(LDFLAGS) -L. -l:./libpuny-server.so
 
 %.o : %.c
 	$(info Processing source $<)

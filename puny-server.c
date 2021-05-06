@@ -2,7 +2,23 @@
 
 #include "puny-server.h"
 
+int server_sock;
+// char * callback (int (*f)(char *request));//  { return fn (y); }
+char * (*callback)(char *request);
+
 static volatile int keep_running = 1;
+
+void
+set_server_sock (int sock)
+{
+  server_sock = sock;
+}
+
+void
+set_callback (char * (*cb)(char *request))
+{
+  callback = cb;
+}
 
 void
 sigint_handler (__attribute__((unused))int dummy)
@@ -103,6 +119,8 @@ read_tcp (int sock)
     }
 
   buf[offset] = 0;
+
+  fprintf (stderr, "The buf was: %s", buf);
 
   return buf;
 }

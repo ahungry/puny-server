@@ -13,7 +13,7 @@ main(__attribute__((unused))int argc,
   signal (SIGINT, sigint_handler);
 
   int sock = make_sock (PORT_STR);
-  server_sock = sock;
+  set_server_sock (sock);
 
   fprintf (stderr, "Listening on %s\n", PORT_STR);
 

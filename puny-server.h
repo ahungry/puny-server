@@ -40,10 +40,6 @@
 #define BUF_LEN 512
 #define MAX_HTML_FILE_SIZE 8192
 
-int server_sock;
-// char * callback (int (*f)(char *request));//  { return fn (y); }
-char * (*callback)(char *request);
-
 void sigint_handler (int dummy);
 void wait_for_zombie ();
 
@@ -54,4 +50,8 @@ void * thread_fn (void *ptr);
 
 void take_connections_forever (int ssock);
 int make_sock ();
+
+void set_server_sock (int sock);
+void set_callback (char * (*callback)(char *request));
+
 #endif
